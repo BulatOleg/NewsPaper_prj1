@@ -1,0 +1,39 @@
+{% extends 'default.html' %}
+
+
+   {% block title %}
+           <!-- Content Row-->
+    <div class="row gx-4 gx-lg-5 align-items-center my-5">
+                {% if new.img.url != "/media/0" %}
+                <div class="col-lg-7"><img class="img-fluid rounded mb-4 mb-lg-0" src="{{new.img.url}}" alt="..." /></div>
+                {% elif new %}
+                <div class="col-lg-7"><img class="img-fluid rounded mb-4 mb-lg-0" src="https://dummyimage.com/900x400/dee2e6/6c757d.jpg" alt="..." /></div>
+                {% endif %}
+
+                <div class="col-lg-5">
+                    <h1 class="font-weight-light">{{new.title}}</h1>
+                        <i>ID: {{new.id}};</i> <i>date: {{new.dateCreation|date:'d.M.Y'}}</i> <i>Категория:
+                        {{new.categoryType}}</i>
+                </div>
+            </div>
+            <!-- Call to Action-->
+            <div class="card text-white bg-secondary my-5 py-4 text-center">
+                <div class="card-body"><p class="text-white m-0">
+                    <!- начало таблицы -->
+                    <p class="card-text" align="left">{{new.text}}</p>
+                    {% for com in comm %}
+                    <p class="card-text"   align="left">{{com}}</p>
+                    {% endfor %}
+                    <div class="card-footer"><a class="btn btn-primary btn-sm" href="/news/news_list">НАЗАД</a></div>
+                    <!- конец таблицы -->
+
+                </div>
+            </div>
+
+<!--  --->
+
+
+
+
+
+    {% endblock %}

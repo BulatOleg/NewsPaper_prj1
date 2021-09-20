@@ -1,9 +1,15 @@
+import uuid
+
 from django.db import models
 from django.contrib.auth.models import User
 from django.db.models import Sum
+from django.shortcuts import reverse
+from django.template.defaultfilters import slugify
+import datetime
+
 
 # Create your models here.
-class Author ( models.Model ): # Имя таблицы
+class Author ( models.Model ):  # Имя таблицы
     authorUser = models.OneToOneField ( User, on_delete=models.CASCADE )
     ratingAuthor = models.SmallIntegerField ( default=0 )
 
@@ -34,10 +40,17 @@ class Post ( models.Model ):
     categoryType = models.CharField ( max_length=2, choices=CATEGORY_CHOICES, default=ARTICLE )
     dateCreation = models.DateTimeField ( auto_now_add=True )
     postCategory = models.ManyToManyField ( Category, through='PostCategory' )
-    title = models.CharField ( max_length=128 )
+    title = models.CharField ( max_length=128, unique=True )
     text = models.TextField ()
-    img = models.ImageField(upload_to='pics')
+    img = models.ImageField ( upload_to='pics', blank=True )
     rating = models.SmallIntegerField ( default=0 )
+    slug = models.SlugField ( max_length=80, unique=True, null=True, db_index=True, verbose_name="URL" )
+
+    def get_absolute_url(self):
+        return reverse ( 'detail', kwargs={'slug': self.slug} )
+
+    def __str__(self):
+        return format(self.title)
 
     def like(self):
         self.rating += 1
@@ -59,9 +72,10 @@ class PostCategory ( models.Model ):
 class Comment ( models.Model ):
     commentPost = models.ForeignKey ( Post, on_delete=models.CASCADE )
     commentUser = models.ForeignKey ( User, on_delete=models.CASCADE )
-    text = models.TextField ()
-    dateCreation = models.DateTimeField ( auto_now_add=True )
-    rating = models.SmallIntegerField ( default=0 )
+    text = models.TextField()
+    dateCreation = models.DateTimeField(auto_now_add=True )
+    rating = models.SmallIntegerField(default=0 )
+
 
     def __str__(self):
         return self.commentUser.username
